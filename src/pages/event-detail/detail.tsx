@@ -3,12 +3,20 @@ import { selectEventDetailState } from '~/store/reducers/event-detail-reducer'
 import OutcomeItem from './outcome'
 import { addToBasket } from '~/store/reducers/basket-reducer'
 import { logEvent } from '~/utils/firebase'
+import { useEffect } from 'react'
 
 const EventDetail = () => {
   const { detail } = useAppSelector(selectEventDetailState)
   const dispatch = useAppDispatch()
 
   if (!detail) return null
+
+  useEffect(() => {
+    logEvent('view_event', {
+      page: 'event-detail',
+      ...detail,
+    })
+  }, [])
 
   return (
     <div className="container mx-auto p-4">
@@ -50,10 +58,7 @@ const EventDetail = () => {
                             outcome,
                           }
 
-                          logEvent('button_click', {
-                            button_name: 'add_to_cart',
-                            page: 'home_page',
-                          })
+                          logEvent('add_to_cart', eventDetails)
                           dispatch(addToBasket(eventDetails))
                         }}
                         {...outcome}

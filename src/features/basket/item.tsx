@@ -3,6 +3,7 @@ import {
   BasketItem as BasketItemType,
   removeFromBasket,
 } from '~/store/reducers/basket-reducer'
+import { logEvent } from '~/utils/firebase'
 
 type BasketItemProps = BasketItemType & {
   index: number
@@ -37,7 +38,17 @@ const BasketItem = ({
         </p>
       </div>
       <button
-        onClick={() => dispatch(removeFromBasket(index))}
+        onClick={() => {
+          logEvent('remove_to_cart', {
+            eventId,
+            market,
+            outcome,
+            homeTeam,
+            bookmaker,
+            awayTeam,
+          })
+          dispatch(removeFromBasket(index))
+        }}
         className="text-red-600 hover:text-red-800"
       >
         Remove
